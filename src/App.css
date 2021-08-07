@@ -1,0 +1,19 @@
+.main-layout {
+    margin: 50px;
+}
+  
+.comment-list {
+    margin-left: 5px;
+}
+
+.ant-card {
+    margin-top: 5px;
+}
+
+.active-post {
+    border: 1px solid black;
+}
+
+.post-container {
+    cursor: pointer;
+}
