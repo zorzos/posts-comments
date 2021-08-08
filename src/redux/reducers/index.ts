@@ -1,46 +1,72 @@
 import {combineReducers} from 'redux'
+import { sortCommentTree } from './util'
 
-const postList = (state = null, action: any) => {
+const userList = (state = [], action: any) => {
+    const payload = action?.payload
+    switch (action?.type) {
+        case "USERS_LIST":
+            return payload
+        default:
+            return state
+    }
+}
+
+const postList = (state = [], action: any) => {
     const payload = action?.payload
     switch (action?.type) {
         case "POSTS_LIST":
             return payload
-        case "VIDEOS_LIST_ERROR_MESSAGE":
-            return payload
         default:
             return state
     }
 }
 
-const commentList = (state = null, action: any) => {
+const commentList = (state = [], action: any) => {
     const payload = action?.payload
     switch (action?.type) {
-        case "COMMENT_LIST":
+        case "COMMENTS_LIST":
             return payload
-        case "VIDEOS_LIST_ERROR_MESSAGE":
-            return payload
+        case "ADD_COMMENT":
+            if (payload.replyingTo) {
+                return sortCommentTree(state, payload)
+            } else {
+                return [
+                    ...state,
+                    payload
+                ]
+            }
         default:
             return state
     }
 }
 
 
-const postSelected = (state = null, action: any) => {
-    const payload = action?.payload
+const selectedPost = (state = {}, action: any) => {
     switch (action?.type) {
-        case "POST_LIST":
-            return payload[1]
-        case "POST_SELECTED":
-            return action.post
+        case "SELECTED_POST":
+            return action.payload
+        default:
+            return state
+    }
+}
+
+const postComments = (state = [], action: any) => {
+    switch (action?.type) {
+        case "POST_COMMENTS":
+            return [
+                ...action?.payload
+            ]
         default:
             return state
     }
 }
 
 const rootReducer = combineReducers({
+    userList,
     postList,
     commentList,
-    postSelected
+    selectedPost,
+    postComments
 })
 
 export default rootReducer

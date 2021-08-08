@@ -19,11 +19,23 @@ interface CommentType {
     email: string
     body: string,
     username: string,
-    tag: string[]
+    tags: string[],
+    replies: CommentType[],
+    replyingTo: number
+}
+
+interface CommentToAddType {
+    replyingTo: number | undefined,
+    postId: number,
+    email: string
+    body: string,
+    username: string,
+    tags: string[]
 }
 
 export {
     PostType,
     UserType,
-    CommentType
+    CommentType,
+    CommentToAddType
 }

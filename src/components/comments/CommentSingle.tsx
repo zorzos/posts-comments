@@ -1,23 +1,40 @@
 import * as React from 'react'
-import { Comment } from 'antd'
+import { Comment, Tag } from 'antd'
+import { CommentToAddType, CommentType } from '../../type'
 import ReplyEditor from './ReplyEditor'
 
-const replyTo = (value: string) => {
-    console.log(value)
-}
-
 function CommentSingle(props: {
+    id: number
     body: string,
     username: string,
-    currentPostId: number
+    currentPostId: number,
+    tags: string[],
+    replies?: CommentType[],
+    addComment: (comment: CommentToAddType) => void
 }) {
     const [showReplyEditor, setShowReplyEditor] = React.useState(false)
 
+    const addNestedComment = (comment: CommentToAddType) => {
+        setShowReplyEditor(false)
+        addComment(comment)
+    }
+
     const {
+        id,
         body,
         username,
-        currentPostId
+        currentPostId,
+        tags,
+        replies,
+        addComment
     } = props
+    const tempTags = tags?.map((tag: string) => {
+        return <Tag key={tag}>{tag}</Tag>
+    })
+    const newUsername = <span>
+        <div>{username}</div>
+        <span>{tempTags}</span>
+    </span>
     return (
         <span>
             <Comment
@@ -29,14 +46,27 @@ function CommentSingle(props: {
                         Reply to
                     </span>
                 ]}
-                author={username}
+                author={newUsername}
                 content={<p>
                     {body}
                 </p>}
-            />
+            >
+                {replies && replies.length > 0 && replies.map(reply => {
+                    return <CommentSingle
+                        id={reply.id}
+                        body={reply.body}
+                        username={reply.username ? reply.username : reply.email}
+                        currentPostId={currentPostId}
+                        tags={reply.tags}
+                        addComment={addComment}
+                        replies={reply.replies}
+                    />
+                })}
+            </Comment>
             {showReplyEditor && 
                 <ReplyEditor
-                    addComment={replyTo}
+                    commentId={id}
+                    addComment={addNestedComment}
                     currentPostId={currentPostId}
                 />
             }
