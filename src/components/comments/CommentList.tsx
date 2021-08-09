@@ -30,7 +30,13 @@ function CommentList(props: {
                 )
             })}
             {currentPostId !== -1 &&
-                <Button onClick={() => {setShowReplyEditor(!showReplyEditor)}} type="link">Click to reply to this post</Button>
+                <Button 
+                    className="add-reply-button"
+                    onClick={() => {setShowReplyEditor(!showReplyEditor)}} 
+                    type="link"
+                >
+                    Click to reply to this post
+                </Button>
             }
             {showReplyEditor &&
                 <ReplyEditor

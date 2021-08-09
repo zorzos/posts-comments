@@ -52,7 +52,7 @@ function ReplyEditor(props: {
             setSubmitting(false)
         } else {
             setError(true)
-            setErrorMessage("Comment field cannot be empty")
+            setErrorMessage("Comment field cannot be empty. Please enter a value before submitting.")
         }
     }
 
@@ -71,7 +71,7 @@ function ReplyEditor(props: {
                     showCount={true}
                     allowClear
                 />
-                {error && <span>{errorMessage}</span>}
+                {error && <span className="error-message">{errorMessage}</span>}
             </Form.Item>
             <Form.Item>
                 <Row>

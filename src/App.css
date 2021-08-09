@@ -1,3 +1,7 @@
+body {
+    background-color: ghostwhite;
+}
+
 .main-layout {
     margin: 50px;
 }
@@ -11,9 +15,19 @@
 }
 
 .active-post {
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);
 }
 
 .post-container {
     cursor: pointer;
+}
+
+.add-reply-button {
+    margin-left: -1%;
+}
+
+.error-message {
+    color: red;
 }
