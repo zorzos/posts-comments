@@ -15,19 +15,20 @@ import {
 } from './type'
 
 import * as actions from "./redux/actions"
+import { sortReplies } from './redux/reducers/util'
 interface DefaultState extends DefaultRootState {
   postList: PostType[],
-  commentList: CommentType[],
   postComments: CommentType[],
-  userList: UserType[]
+  userList: UserType[],
+  replies: CommentType[]
 }
 
 function App() {
     const dispatch = useDispatch()
     const postList = useSelector((state: DefaultState) => state.postList)
-    const commentList = useSelector((state: DefaultState) => state.commentList)
     const postComments = useSelector((state: DefaultState) => state.postComments)
     const userList = useSelector((state: DefaultState) => state.userList)
+    const replies = useSelector((state: DefaultState) => state.replies)
 
     const [currentPostId, setCurrentPostId] = React.useState(-1)
     const [usernameFilter, setUsernameFilter] = React.useState("")
@@ -41,17 +42,17 @@ function App() {
     }, [])
 
     React.useEffect(() => {
-        api.getComments().then(response => {
-            const commentsWithUsername = response.data.map((comment: CommentType) => {
-                const username = getUsernameByEmail(comment.email)
+        // api.getComments().then(response => {
+        //     const commentsWithUsername = response.data.map((comment: CommentType) => {
+        //         const username = getUsernameByEmail(comment.email)
 
-                return {
-                    ...comment,
-                    username
-                }
-            })
-            dispatch(actions.setCommentList(commentsWithUsername))
-        })
+        //         return {
+        //             ...comment,
+        //             username
+        //         }
+        //     })
+        //     dispatch(actions.setCommentList(commentsWithUsername))
+        // })
 
         api.getPosts().then(response => {
             const postsWithUsername = response.data.map((post: PostType) => {
@@ -66,24 +67,31 @@ function App() {
         })
     }, [userList])
 
-    React.useEffect(() => {
-      dispatch(actions.postComments(getCommentsPerPost(currentPostId) as never[]))
-    }, [commentList])
-
-    const getCommentsPerPost = (currentPostId: number) => {
-      return commentList.filter((comment: CommentType) => {
-        return comment.postId === currentPostId
-      })
-    }
+    // React.useEffect(() => {
+    //   dispatch(actions.postComments(getCommentsPerPost(currentPostId) as never[]))
+    // }, [commentList])
 
     React.useEffect(() => {
         if (currentPostId !== -1) {
           const currentPost = postList.filter((post: PostType) => {
             return post.id === currentPostId
           })[0]
-
           dispatch(actions.setSelectedPost(currentPost))
-          dispatch(actions.postComments(getCommentsPerPost(currentPostId) as never[]))
+
+          api.getCommentsTEST(currentPostId).then(response => {
+            const commentsWithUsername = response.data.map((comment: CommentType) => {
+              const username = getUsernameByEmail(comment.email)
+
+              return {
+                  ...comment,
+                  username
+              }
+            })
+            dispatch(actions.postComments(commentsWithUsername))
+          })
+
+          // dispatch(actions.setSelectedPost(currentPost))
+          // dispatch(actions.postComments(getCommentsPerPost(currentPostId) as never[]))
         }
     }, [currentPostId])
 
@@ -121,10 +129,9 @@ function App() {
           addedComment.id = nextId
           setNextDummyId(nextId)
         }
-        dispatch(actions.addComment(response.data))
-        if (response.data.replyingTo) {
-          dispatch(actions.postComments(getCommentsPerPost(currentPostId) as never[]))
-        }
+        dispatch(actions.addReply(addedComment))
+        const sortedComments = sortReplies(postComments, [addedComment])
+        dispatch(actions.postComments(sortedComments))
       })
     }
 

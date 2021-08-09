@@ -18,20 +18,6 @@ const setPostList = (posts: PostType[]) => {
         payload: posts
     }
 }
-
-const setCommentList = (comments: CommentType[]) => {
-    return {
-        type: 'COMMENTS_LIST',
-        payload: comments
-    }
-}
-
-const addComment = (comment: CommentToAddType) => {
-    return {
-        type: "ADD_COMMENT",
-        payload: comment
-    }
-}
   
 const setSelectedPost = (post: PostType) => {
     return {
@@ -40,18 +26,24 @@ const setSelectedPost = (post: PostType) => {
     }
 }
 
-const postComments = (posts: PostType[]) => {
+const postComments = (comments: CommentType[]) => {
     return {
         type: "POST_COMMENTS",
-        payload: posts
+        payload: comments
+    }
+}
+
+const addReply = (comment: CommentToAddType) => {
+    return {
+        type: "ADD_REPLY",
+        payload: comment
     }
 }
 
 export {
     setUserList,
     setPostList,
-    setCommentList,
-    addComment,
     setSelectedPost,
-    postComments
+    postComments,
+    addReply
 }

@@ -1,5 +1,4 @@
 import {combineReducers} from 'redux'
-import { sortCommentTree } from './util'
 
 const userList = (state = [], action: any) => {
     const payload = action?.payload
@@ -21,20 +20,13 @@ const postList = (state = [], action: any) => {
     }
 }
 
-const commentList = (state = [], action: any) => {
-    const payload = action?.payload
+const replies = (state = [], action: any) => {
     switch (action?.type) {
-        case "COMMENTS_LIST":
-            return payload
-        case "ADD_COMMENT":
-            if (payload.replyingTo) {
-                return sortCommentTree(state, payload)
-            } else {
-                return [
-                    ...state,
-                    payload
-                ]
-            }
+        case "ADD_REPLY":
+            return [
+                ...state,
+                action?.payload
+            ]
         default:
             return state
     }
@@ -64,9 +56,9 @@ const postComments = (state = [], action: any) => {
 const rootReducer = combineReducers({
     userList,
     postList,
-    commentList,
     selectedPost,
-    postComments
+    postComments,
+    replies
 })
 
 export default rootReducer

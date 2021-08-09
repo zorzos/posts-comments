@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Divider } from 'antd'
+import { Divider, Button } from 'antd'
 import { CommentType, CommentToAddType } from '../../type'
 import CommentSingle from './CommentSingle'
 import ReplyEditor from './ReplyEditor'
@@ -30,7 +30,8 @@ function CommentList(props: {
                 )
             })}
             {currentPostId !== -1 &&
-                <a onClick={() => {setShowReplyEditor(!showReplyEditor)}}>Click to reply to post</a>}
+                <Button onClick={() => {setShowReplyEditor(!showReplyEditor)}} type="link">Click to reply to this post</Button>
+            }
             {showReplyEditor &&
                 <ReplyEditor
                     addComment={addComment}
