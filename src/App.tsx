@@ -130,7 +130,7 @@ function App() {
           setNextDummyId(nextId)
         }
         dispatch(actions.addReply(addedComment))
-        const sortedComments = sortReplies(postComments, [addedComment])
+        const sortedComments = sortReplies(postComments, addedComment)
         dispatch(actions.postComments(sortedComments))
       })
     }
